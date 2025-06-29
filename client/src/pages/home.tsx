@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "@/components/header";
 import PropertySearch from "@/components/property-search";
 import PropertyResults from "@/components/property-results";
+import PropertyListings from "@/components/property-listings";
 import { Home } from "lucide-react";
 import type { AnalysisResult } from "@shared/schema";
 
@@ -20,6 +21,11 @@ export default function HomePage() {
             <PropertyResults results={results} />
           </div>
         )}
+
+        {/* Property Listings Section */}
+        <div className="mt-8">
+          <PropertyListings />
+        </div>
       </main>
 
       {/* Footer */}

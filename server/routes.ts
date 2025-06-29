@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { scraper } from "./services/scraper";
 import { analyzer } from "./services/analysis";
-import { searchPropertySchema, type AnalysisResult } from "@shared/schema";
+import { searchPropertySchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -71,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysis = await storage.createPropertyAnalysis(analysisData);
       
       // Generate some similar properties for comparison
-      const similarProperties = await this.generateSimilarProperties(property);
+      const similarProperties = await generateSimilarProperties(property);
       
       const result: AnalysisResult = {
         property,
@@ -146,6 +146,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get similar properties error:', error);
       res.status(500).json({ message: "Error retrieving similar properties" });
+    }
+  });
+
+  // Get all properties sorted by fairness rating
+  app.get("/api/properties", async (req, res) => {
+    try {
+      const { neighbourhood, limit = "20" } = req.query;
+      
+      let properties = await storage.getAllPropertiesWithAnalysis();
+      
+      // Filter by neighbourhood if specified
+      if (neighbourhood && typeof neighbourhood === 'string') {
+        properties = properties.filter((p: PropertyWithAnalysis) => 
+          p.neighbourhood?.toLowerCase().includes(neighbourhood.toLowerCase()) ||
+          p.address.toLowerCase().includes(neighbourhood.toLowerCase())
+        );
+      }
+      
+      // Sort by fairness: gold first, then silver, then bronze, then by score
+      const ratingOrder = { 'gold': 4, 'silver': 3, 'bronze': 2, 'none': 1 };
+      properties.sort((a: PropertyWithAnalysis, b: PropertyWithAnalysis) => {
+        const ratingDiff = (ratingOrder[b.analysis.rating as keyof typeof ratingOrder] || 0) - 
+                          (ratingOrder[a.analysis.rating as keyof typeof ratingOrder] || 0);
+        if (ratingDiff !== 0) return ratingDiff;
+        return b.analysis.score - a.analysis.score;
+      });
+      
+      // Limit results
+      const limitNum = parseInt(limit as string);
+      properties = properties.slice(0, limitNum);
+      
+      res.json(properties);
+    } catch (error) {
+      console.error('Get properties error:', error);
+      res.status(500).json({ message: "Error retrieving properties" });
     }
   });
 

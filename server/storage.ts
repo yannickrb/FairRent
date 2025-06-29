@@ -14,6 +14,7 @@ export interface IStorage {
   // Combined operations
   getPropertyWithAnalysis(id: number): Promise<PropertyWithAnalysis | undefined>;
   getPropertiesWithAnalysisByArea(neighbourhood: string, bedrooms: number, propertyType: string): Promise<PropertyWithAnalysis[]>;
+  getAllPropertiesWithAnalysis(): Promise<PropertyWithAnalysis[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -32,7 +33,11 @@ export class MemStorage implements IStorage {
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const id = this.currentPropertyId++;
     const property: Property = { 
-      ...insertProperty, 
+      ...insertProperty,
+      sqm: insertProperty.sqm ?? null,
+      postcode: insertProperty.postcode ?? null,
+      neighbourhood: insertProperty.neighbourhood ?? null,
+      listingUrl: insertProperty.listingUrl ?? null,
       id,
       createdAt: new Date()
     };
@@ -66,7 +71,10 @@ export class MemStorage implements IStorage {
   async createPropertyAnalysis(insertAnalysis: InsertPropertyAnalysis): Promise<PropertyAnalysis> {
     const id = this.currentAnalysisId++;
     const analysis: PropertyAnalysis = { 
-      ...insertAnalysis, 
+      ...insertAnalysis,
+      marketSavings: insertAnalysis.marketSavings ?? null,
+      regulationSavings: insertAnalysis.regulationSavings ?? null,
+      ownershipSavings: insertAnalysis.ownershipSavings ?? null,
       id,
       createdAt: new Date()
     };
@@ -93,6 +101,20 @@ export class MemStorage implements IStorage {
     const propertiesWithAnalysis: PropertyWithAnalysis[] = [];
 
     for (const property of properties) {
+      const analysis = await this.getPropertyAnalysis(property.id);
+      if (analysis) {
+        propertiesWithAnalysis.push({ ...property, analysis });
+      }
+    }
+
+    return propertiesWithAnalysis;
+  }
+
+  async getAllPropertiesWithAnalysis(): Promise<PropertyWithAnalysis[]> {
+    const allProperties = Array.from(this.properties.values());
+    const propertiesWithAnalysis: PropertyWithAnalysis[] = [];
+
+    for (const property of allProperties) {
       const analysis = await this.getPropertyAnalysis(property.id);
       if (analysis) {
         propertiesWithAnalysis.push({ ...property, analysis });

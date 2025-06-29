@@ -114,6 +114,12 @@ FairRent is a full-stack web application that helps users analyze rental propert
 - Cartographer plugin for code navigation
 - Development banner script for external access
 
+## Recent Changes
+- June 29, 2025: Added property listings section below search with fairness-based sorting
+- June 29, 2025: Implemented filtering by location and comprehensive property comparison
+- June 29, 2025: Enhanced UI with detailed property cards showing ratings and savings
+- June 29, 2025: Initial setup complete with search, analysis, and comparison features
+
 ## Changelog
 - June 29, 2025. Initial setup
 
