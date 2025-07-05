@@ -4,8 +4,6 @@
 
 FairRent is a full-stack web application that helps users analyze rental property prices by comparing them against market averages, regulation limits, and ownership costs. The application provides a comprehensive analysis system that rates properties with bronze, silver, or gold rankings based on how they perform against key affordability criteria.
 
-The platform supports multiple countries (UK, South Africa, Netherlands) with localized currency formatting and region-specific pricing examples. Users can select their country and city on the landing page, which pre-populates the demo application with relevant location data.
-
 ## System Architecture
 
 ### Frontend Architecture
@@ -117,12 +115,6 @@ The platform supports multiple countries (UK, South Africa, Netherlands) with lo
 - Development banner script for external access
 
 ## Recent Changes
-- July 5, 2025: **ADDED** - Multi-country support with localized pricing
-  - Expanded FairRent to support UK, South Africa, and Netherlands
-  - Added country and city selection on landing page
-  - Dynamic currency formatting (GBP, ZAR, EUR) based on selected country
-  - Example pricing updates automatically with country-specific amounts
-  - URL parameters pass location data from landing page to demo app
 - July 5, 2025: **REMOVED** - Early access signup system
   - Removed email collection forms and early access signup functionality
   - Cleaned up backend API routes and storage for early access signups

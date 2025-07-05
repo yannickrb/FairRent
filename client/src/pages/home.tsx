@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "@/components/header";
 import PropertySearch from "@/components/property-search";
 import PropertyResults from "@/components/property-results";
@@ -10,18 +10,6 @@ import type { AnalysisResult } from "@shared/schema";
 export default function HomePage() {
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [initialLocation, setInitialLocation] = useState<{country?: string; city?: string}>({});
-
-  useEffect(() => {
-    // Read URL parameters for initial location
-    const urlParams = new URLSearchParams(window.location.search);
-    const country = urlParams.get('country');
-    const city = urlParams.get('city');
-    
-    if (country || city) {
-      setInitialLocation({ country: country || undefined, city: city || undefined });
-    }
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
