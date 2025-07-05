@@ -47,7 +47,7 @@ export default function HomePage() {
               </div>
               <div>
                 <div className="font-bold text-gray-900">FairRent</div>
-                <div className="text-sm text-gray-500">Property Rental Price Checker</div>
+                <div className="text-sm text-gray-500">A rental price fairness checker that helps property renters solve uncertainty about overpaying</div>
               </div>
             </div>
             <div className="flex space-x-6 text-sm text-gray-500">

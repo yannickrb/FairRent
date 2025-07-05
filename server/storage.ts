@@ -1,4 +1,4 @@
-import { properties, propertyAnalysis, type Property, type InsertProperty, type PropertyAnalysis, type InsertPropertyAnalysis, type PropertyWithAnalysis } from "@shared/schema";
+import { properties, propertyAnalysis, earlyAccessSignups, type Property, type InsertProperty, type PropertyAnalysis, type InsertPropertyAnalysis, type PropertyWithAnalysis, type EarlyAccessSignup, type InsertEarlyAccessSignup } from "@shared/schema";
 
 export interface IStorage {
   // Property operations
@@ -15,19 +15,27 @@ export interface IStorage {
   getPropertyWithAnalysis(id: number): Promise<PropertyWithAnalysis | undefined>;
   getPropertiesWithAnalysisByArea(neighbourhood: string, bedrooms: number, propertyType: string): Promise<PropertyWithAnalysis[]>;
   getAllPropertiesWithAnalysis(): Promise<PropertyWithAnalysis[]>;
+  
+  // Early access operations
+  createEarlyAccessSignup(signup: InsertEarlyAccessSignup): Promise<EarlyAccessSignup>;
+  getEarlyAccessSignups(): Promise<EarlyAccessSignup[]>;
 }
 
 export class MemStorage implements IStorage {
   private properties: Map<number, Property>;
   private propertyAnalysis: Map<number, PropertyAnalysis>;
+  private earlyAccessSignups: Map<number, EarlyAccessSignup>;
   private currentPropertyId: number;
   private currentAnalysisId: number;
+  private currentSignupId: number;
 
   constructor() {
     this.properties = new Map();
     this.propertyAnalysis = new Map();
+    this.earlyAccessSignups = new Map();
     this.currentPropertyId = 1;
     this.currentAnalysisId = 1;
+    this.currentSignupId = 1;
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
@@ -122,6 +130,30 @@ export class MemStorage implements IStorage {
     }
 
     return propertiesWithAnalysis;
+  }
+
+  async createEarlyAccessSignup(insertSignup: InsertEarlyAccessSignup): Promise<EarlyAccessSignup> {
+    // Check if email already exists
+    const existingSignup = Array.from(this.earlyAccessSignups.values()).find(
+      signup => signup.email === insertSignup.email
+    );
+    
+    if (existingSignup) {
+      throw new Error('Email already registered for early access');
+    }
+
+    const signup: EarlyAccessSignup = { 
+      id: this.currentSignupId++,
+      email: insertSignup.email,
+      timestamp: new Date()
+    };
+    
+    this.earlyAccessSignups.set(signup.id, signup);
+    return signup;
+  }
+
+  async getEarlyAccessSignups(): Promise<EarlyAccessSignup[]> {
+    return Array.from(this.earlyAccessSignups.values());
   }
 }
 

@@ -35,6 +35,12 @@ export const propertyAnalysis = pgTable("property_analysis", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const earlyAccessSignups = pgTable("early_access_signups", {
+  id: serial("id").primaryKey(),
+  email: text("email").unique().notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
+
 export const insertPropertySchema = createInsertSchema(properties).omit({
   id: true,
   createdAt: true,
@@ -49,11 +55,18 @@ export const searchPropertySchema = z.object({
   query: z.string().min(1, "Please enter a property address or postcode"),
 });
 
+export const insertEarlyAccessSignupSchema = createInsertSchema(earlyAccessSignups).omit({
+  id: true,
+  timestamp: true,
+});
+
 export type Property = typeof properties.$inferSelect;
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type PropertyAnalysis = typeof propertyAnalysis.$inferSelect;
 export type InsertPropertyAnalysis = z.infer<typeof insertPropertyAnalysisSchema>;
 export type SearchProperty = z.infer<typeof searchPropertySchema>;
+export type EarlyAccessSignup = typeof earlyAccessSignups.$inferSelect;
+export type InsertEarlyAccessSignup = z.infer<typeof insertEarlyAccessSignupSchema>;
 
 export interface PropertyWithAnalysis extends Property {
   analysis: PropertyAnalysis;
