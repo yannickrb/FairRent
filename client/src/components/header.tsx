@@ -15,10 +15,6 @@ export default function Header() {
             </div>
           </div>
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-500 hover:text-gray-900 font-medium flex items-center gap-1">
-              <Info className="h-4 w-4" />
-              How it works
-            </a>
             <a href="#" className="text-gray-500 hover:text-gray-900 font-medium">About</a>
             <a href="#" className="text-gray-500 hover:text-gray-900 font-medium flex items-center gap-1">
               <Mail className="h-4 w-4" />
