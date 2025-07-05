@@ -1,5 +1,4 @@
 import { scraper as mockScraper } from "./scraper";
-import { ukRentalDataService } from "./uk-rental-data";
 import { type Property, type InsertProperty } from "@shared/schema";
 
 interface DataSourceConfig {
@@ -11,7 +10,6 @@ interface DataSourceConfig {
 
 interface DataSources {
   propertyData: DataSourceConfig;
-  ukOpenData: DataSourceConfig;
   mock: DataSourceConfig;
 }
 
@@ -39,11 +37,7 @@ export class DataSourceManager {
         baseUrl: "https://api.propertydata.co.uk/rental-listings",
         rateLimit: 100 // requests per hour
       },
-      ukOpenData: {
-        enabled: false, // Disabled - too vague for individual property analysis
-        baseUrl: "https://www.gov.uk/government/statistics/property-rental-income-statistics",
-        rateLimit: 0 // Static data, no rate limits
-      },
+
       mock: {
         enabled: true // Always available as fallback
       }
@@ -61,15 +55,7 @@ export class DataSourceManager {
       }
     }
 
-    // Try UK Open Data sources
-    if (this.config.ukOpenData.enabled) {
-      try {
-        const result = await this.searchUKOpenDataRentals(query);
-        if (result) return result;
-      } catch (error) {
-        console.log('Open data sources unavailable, using mock data...');
-      }
-    }
+
 
     // Fall back to mock data (always works)
     return await mockScraper.searchProperty(query);
@@ -86,26 +72,7 @@ export class DataSourceManager {
       }
     }
 
-    // Try UK Government rental data
-    if (this.config.ukOpenData.enabled) {
-      try {
-        const rentalData = ukRentalDataService.getRentalDataByRegion(neighbourhood);
-        if (rentalData) {
-          // Generate market data based on UK government averages with bedroom adjustment
-          const baseRent = ukRentalDataService.getMarketRentEstimate('', bedrooms);
-          const variation = baseRent * 0.15; // 15% variation
-          return [
-            Math.round(baseRent - variation),
-            Math.round(baseRent - variation * 0.5),
-            Math.round(baseRent),
-            Math.round(baseRent + variation * 0.5),
-            Math.round(baseRent + variation)
-          ];
-        }
-      } catch (error) {
-        console.log('UK Government data unavailable...');
-      }
-    }
+
 
     // Fall back to mock market data
     return await mockScraper.getMarketData(neighbourhood, bedrooms, propertyType);
@@ -146,36 +113,7 @@ export class DataSourceManager {
     return null;
   }
 
-  private async searchUKOpenDataRentals(query: string): Promise<PropertyDataResult | null> {
-    // Extract postcode from query
-    const postcodeMatch = query.match(/([A-Z]{1,2}\d{1,2}[\s]?\d[A-Z]{2})/i);
-    const postcode = postcodeMatch ? postcodeMatch[1].toUpperCase() : '';
-    
-    if (!postcode || !ukRentalDataService.isPostcodeSupported(postcode)) {
-      return null;
-    }
-    
-    const region = ukRentalDataService.getRegionFromPostcode(postcode);
-    const rentalData = ukRentalDataService.getRentalDataByPostcode(postcode);
-    
-    if (!rentalData) return null;
-    
-    // Generate property based on UK rental data
-    const avgRent = rentalData.avgMonthlyRent;
-    
-    return {
-      address: `Property in ${region}, ${postcode}`,
-      bedrooms: 2, // Default
-      bathrooms: 1,
-      sqm: 70,
-      propertyType: 'Flat',
-      monthlyRent: Math.round(avgRent),
-      postcode: postcode,
-      neighbourhood: region,
-      listingUrl: 'https://www.gov.uk/government/statistics/property-rental-income-statistics',
-      source: 'UK Government Data'
-    };
-  }
+
 
   private async getPropertyDataMarketRates(neighbourhood: string, bedrooms: number, propertyType: string): Promise<number[]> {
     if (!this.config.propertyData.apiKey) return [];
@@ -208,9 +146,6 @@ export class DataSourceManager {
     if (this.config.propertyData.enabled && this.config.propertyData.apiKey) {
       sources.push('PropertyData API');
     }
-    if (this.config.ukOpenData.enabled) {
-      sources.push('UK Government Data');
-    }
     sources.push('Mock Data (Demo)');
     return sources;
   }
@@ -222,11 +157,7 @@ export class DataSourceManager {
         status: this.config.propertyData.enabled && this.config.propertyData.apiKey ? 'Available' : 'Requires API Key',
         description: 'Real-time data from Rightmove, Zoopla, OnTheMarket'
       },
-      {
-        source: 'UK Government Data',
-        status: this.config.ukOpenData.enabled ? 'Active' : 'Disabled',
-        description: 'HMRC Property Rental Income Statistics (regional data - too vague for individual properties)'
-      },
+
       {
         source: 'Mock Data',
         status: 'Active',

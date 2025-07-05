@@ -115,6 +115,12 @@ FairRent is a full-stack web application that helps users analyze rental propert
 - Development banner script for external access
 
 ## Recent Changes
+- July 5, 2025: **REMOVED** - Completely removed UK Government regional data system
+  - User requested complete removal of UK Government data source
+  - Cleaned up all code references and unused imports
+  - Removed uk-rental-data.ts service file
+  - Simplified data source manager to only handle PropertyData API and Mock Data
+  - System now runs cleanly with individual property-based analysis only
 - July 5, 2025: **REVERTED** - Disabled UK Government regional data system
   - User feedback: Regional data "too vague" for individual property analysis
   - Restored individual property-based system using mock data
