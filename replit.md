@@ -115,6 +115,15 @@ FairRent is a full-stack web application that helps users analyze rental propert
 - Development banner script for external access
 
 ## Recent Changes
+- July 5, 2025: **REVERTED** - Disabled UK Government regional data system
+  - User feedback: Regional data "too vague" for individual property analysis
+  - Restored individual property-based system using mock data
+  - Kept UK Government data option available but disabled
+  - Maintained original address/postcode search functionality
+- July 5, 2025: Implemented UK Government rental data system (later reverted)
+  - Added HMRC Property Rental Income Statistics integration
+  - Created postcode-to-region mapping for all UK areas
+  - Updated search to focus on postcodes rather than addresses
 - June 29, 2025: **CHECKPOINT** - Core FairRent implementation complete and approved
   - Property search with address/postcode input working
   - Three-tier fairness rating system (Bronze/Silver/Gold) implemented
@@ -122,11 +131,6 @@ FairRent is a full-stack web application that helps users analyze rental propert
   - Property listings sorted by fairness rating displaying correctly
   - Location-based filtering and professional UI completed
   - User feedback: "I love the overall implementation, it fits my vision and more"
-- June 29, 2025: Next phase - integrating real property data sources
-- June 29, 2025: Added property listings section below search with fairness-based sorting
-- June 29, 2025: Implemented filtering by location and comprehensive property comparison
-- June 29, 2025: Enhanced UI with detailed property cards showing ratings and savings
-- June 29, 2025: Initial setup complete with search, analysis, and comparison features
 
 ## Changelog
 - June 29, 2025. Initial setup

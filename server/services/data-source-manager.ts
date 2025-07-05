@@ -40,7 +40,7 @@ export class DataSourceManager {
         rateLimit: 100 // requests per hour
       },
       ukOpenData: {
-        enabled: true,
+        enabled: false, // Disabled - too vague for individual property analysis
         baseUrl: "https://www.gov.uk/government/statistics/property-rental-income-statistics",
         rateLimit: 0 // Static data, no rate limits
       },
@@ -225,7 +225,7 @@ export class DataSourceManager {
       {
         source: 'UK Government Data',
         status: this.config.ukOpenData.enabled ? 'Active' : 'Disabled',
-        description: 'HMRC Property Rental Income Statistics (official regional averages)'
+        description: 'HMRC Property Rental Income Statistics (regional data - too vague for individual properties)'
       },
       {
         source: 'Mock Data',
