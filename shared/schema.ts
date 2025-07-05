@@ -41,6 +41,14 @@ export const earlyAccessSignups = pgTable("early_access_signups", {
   timestamp: timestamp("timestamp").defaultNow().notNull(),
 });
 
+export const userFeedback = pgTable("user_feedback", {
+  id: serial("id").primaryKey(),
+  response: text("response").notNull(), // 'yes', 'maybe', 'not-really'
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  userAgent: text("user_agent"),
+  ipAddress: text("ip_address"),
+});
+
 export const insertPropertySchema = createInsertSchema(properties).omit({
   id: true,
   createdAt: true,
@@ -60,6 +68,11 @@ export const insertEarlyAccessSignupSchema = createInsertSchema(earlyAccessSignu
   timestamp: true,
 });
 
+export const insertUserFeedbackSchema = createInsertSchema(userFeedback).omit({
+  id: true,
+  timestamp: true,
+});
+
 export type Property = typeof properties.$inferSelect;
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type PropertyAnalysis = typeof propertyAnalysis.$inferSelect;
@@ -67,6 +80,8 @@ export type InsertPropertyAnalysis = z.infer<typeof insertPropertyAnalysisSchema
 export type SearchProperty = z.infer<typeof searchPropertySchema>;
 export type EarlyAccessSignup = typeof earlyAccessSignups.$inferSelect;
 export type InsertEarlyAccessSignup = z.infer<typeof insertEarlyAccessSignupSchema>;
+export type UserFeedback = typeof userFeedback.$inferSelect;
+export type InsertUserFeedback = z.infer<typeof insertUserFeedbackSchema>;
 
 export interface PropertyWithAnalysis extends Property {
   analysis: PropertyAnalysis;

@@ -57,11 +57,11 @@ export default function LandingPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">FairRent</h1>
-                <p className="text-sm text-gray-500">Coming Soon</p>
+                <p className="text-sm text-gray-500">Proof of Concept</p>
               </div>
             </div>
             <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-              Beta Launch Soon
+              Concept Only - Mock Data
             </Badge>
           </div>
         </div>
@@ -71,46 +71,22 @@ export default function LandingPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Stop Overpaying for Rent
+            Know if you are overpaying for Rent
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            A rental price fairness checker that helps property renters solve uncertainty about overpaying by comparing rental prices against local market averages, area regulation limits, and ownership prices.
+            A rental price fairness checker that helps property renters know if they are overpaying by comparing rental prices against local market averages, area regulation limits, and ownership price.
           </p>
           
           {!isSubmitted ? (
-            <div className="max-w-md mx-auto">
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-                <Input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1"
-                  required
-                />
-                <Button 
-                  type="submit" 
-                  size="lg"
-                  disabled={signupMutation.isPending}
-                  className="bg-primary hover:bg-primary/90"
-                >
-                  {signupMutation.isPending ? "Joining..." : "Join Waitlist"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
-              <p className="text-sm text-gray-500 mt-4">
-                Be the first to know when FairRent launches. No spam, ever.
-              </p>
               <div className="mt-6">
                 <a 
                   href="/app" 
-                  className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-lg font-bold"
                 >
                   Try Demo
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </div>
-            </div>
           ) : (
             <div className="max-w-md mx-auto">
               <div className="bg-green-100 border border-green-200 rounded-lg p-6">
@@ -187,7 +163,7 @@ export default function LandingPage() {
       <section className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Solution</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">This Solution</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               FairRent instantly analyzes any rental property and gives you a fairness rating
             </p>
@@ -265,46 +241,6 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-primary text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Stop Overpaying?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of renters who want to make informed decisions about their rental costs
-          </p>
-          
-          {!isSubmitted ? (
-            <div className="max-w-md mx-auto">
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-                <Input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-white"
-                  required
-                />
-                <Button 
-                  type="submit" 
-                  size="lg"
-                  disabled={signupMutation.isPending}
-                  className="bg-white text-primary hover:bg-gray-100"
-                >
-                  {signupMutation.isPending ? "Joining..." : "Get Early Access"}
-                  <Mail className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
-            </div>
-          ) : (
-            <div className="text-center">
-              <Check className="h-16 w-16 mx-auto mb-4 opacity-90" />
-              <h3 className="text-2xl font-bold mb-2">Thank you!</h3>
-              <p className="text-lg opacity-90">We'll be in touch soon with early access.</p>
-            </div>
-          )}
         </div>
       </section>
 

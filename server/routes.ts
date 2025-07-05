@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { scraper } from "./services/scraper";
 import { analyzer } from "./services/analysis";
 import { dataSourceManager } from "./services/data-source-manager";
-import { searchPropertySchema, insertEarlyAccessSignupSchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
+import { searchPropertySchema, insertEarlyAccessSignupSchema, insertUserFeedbackSchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {

@@ -11,7 +11,7 @@ export default function Header() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">FairRent</h1>
-              <p className="text-sm text-gray-500">A rental price fairness checker that helps property renters solve uncertainty about overpaying</p>
+              <p className="text-sm text-gray-500">Rental Price Fairness Checker</p>
             </div>
           </div>
           <nav className="hidden md:flex space-x-8">

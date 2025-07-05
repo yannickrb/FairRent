@@ -375,13 +375,13 @@ export default function PropertyResults({ results }: PropertyResultsProps) {
       <Card className="bg-gray-50 border border-gray-200">
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Data Sources & Methodology
+            Data Sources
           </h3>
           <div className="grid md:grid-cols-3 gap-4 text-sm">
             <div>
               <h4 className="font-medium text-gray-900 mb-2">Market Data</h4>
               <p className="text-gray-600">
-                Rightmove, Zoopla listings for similar properties within 0.5 miles, updated daily
+                Commercial listings for similar properties within 0.5 miles
               </p>
             </div>
             <div>

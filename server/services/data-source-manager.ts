@@ -153,16 +153,15 @@ export class DataSourceManager {
   getDataSourceStatus(): { source: string; status: string; description: string }[] {
     return [
       {
-        source: 'PropertyData API',
-        status: this.config.propertyData.enabled && this.config.propertyData.apiKey ? 'Available' : 'Requires API Key',
-        description: 'Real-time data from Rightmove, Zoopla, OnTheMarket'
-      },
-
-      {
         source: 'Mock Data',
         status: 'Active',
         description: 'Realistic demo data for development and testing'
       }
+      /*  {
+        source: 'PropertyData API',
+        status: this.config.propertyData.enabled && this.config.propertyData.apiKey ? 'Available' : 'Requires API Key',
+        description: 'Real-time data from Rightmove, Zoopla, OnTheMarket'
+      },*/
     ];
   }
 }

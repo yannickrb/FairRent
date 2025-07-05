@@ -102,7 +102,7 @@ export default function DataSourceStatus() {
             Currently using <span className="font-medium">{data.currentlyUsing}</span> for property data.
             {data.currentlyUsing === 'Mock Data (Demo)' && (
               <span className="block mt-1">
-                Add PropertyData API key for real property listings.
+                APIs would be used for real data.
               </span>
             )}
           </p>

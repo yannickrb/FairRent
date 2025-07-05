@@ -1,4 +1,4 @@
-import { properties, propertyAnalysis, earlyAccessSignups, type Property, type InsertProperty, type PropertyAnalysis, type InsertPropertyAnalysis, type PropertyWithAnalysis, type EarlyAccessSignup, type InsertEarlyAccessSignup } from "@shared/schema";
+import { properties, propertyAnalysis, earlyAccessSignups, userFeedback, type Property, type InsertProperty, type PropertyAnalysis, type InsertPropertyAnalysis, type PropertyWithAnalysis, type EarlyAccessSignup, type InsertEarlyAccessSignup, type UserFeedback, type InsertUserFeedback } from "@shared/schema";
 
 export interface IStorage {
   // Property operations
@@ -19,23 +19,32 @@ export interface IStorage {
   // Early access operations
   createEarlyAccessSignup(signup: InsertEarlyAccessSignup): Promise<EarlyAccessSignup>;
   getEarlyAccessSignups(): Promise<EarlyAccessSignup[]>;
+  
+  // User feedback operations
+  createUserFeedback(feedback: InsertUserFeedback): Promise<UserFeedback>;
+  getUserFeedback(): Promise<UserFeedback[]>;
+  getUserFeedbackSummary(): Promise<{ yes: number; maybe: number; notReally: number; total: number }>;
 }
 
 export class MemStorage implements IStorage {
   private properties: Map<number, Property>;
   private propertyAnalysis: Map<number, PropertyAnalysis>;
   private earlyAccessSignups: Map<number, EarlyAccessSignup>;
+  private userFeedback: Map<number, UserFeedback>;
   private currentPropertyId: number;
   private currentAnalysisId: number;
   private currentSignupId: number;
+  private currentFeedbackId: number;
 
   constructor() {
     this.properties = new Map();
     this.propertyAnalysis = new Map();
     this.earlyAccessSignups = new Map();
+    this.userFeedback = new Map();
     this.currentPropertyId = 1;
     this.currentAnalysisId = 1;
     this.currentSignupId = 1;
+    this.currentFeedbackId = 1;
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
@@ -154,6 +163,34 @@ export class MemStorage implements IStorage {
 
   async getEarlyAccessSignups(): Promise<EarlyAccessSignup[]> {
     return Array.from(this.earlyAccessSignups.values());
+  }
+
+  async createUserFeedback(insertFeedback: InsertUserFeedback): Promise<UserFeedback> {
+    const feedback: UserFeedback = { 
+      id: this.currentFeedbackId++,
+      response: insertFeedback.response,
+      timestamp: new Date(),
+      userAgent: insertFeedback.userAgent || null,
+      ipAddress: insertFeedback.ipAddress || null
+    };
+    
+    this.userFeedback.set(feedback.id, feedback);
+    return feedback;
+  }
+
+  async getUserFeedback(): Promise<UserFeedback[]> {
+    return Array.from(this.userFeedback.values());
+  }
+
+  async getUserFeedbackSummary(): Promise<{ yes: number; maybe: number; notReally: number; total: number }> {
+    const feedback = Array.from(this.userFeedback.values());
+    const summary = {
+      yes: feedback.filter(f => f.response === 'yes').length,
+      maybe: feedback.filter(f => f.response === 'maybe').length,
+      notReally: feedback.filter(f => f.response === 'not-really').length,
+      total: feedback.length
+    };
+    return summary;
   }
 }
 
