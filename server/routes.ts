@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { scraper } from "./services/scraper";
 import { analyzer } from "./services/analysis";
+import { dataSourceManager } from "./services/data-source-manager";
 import { searchPropertySchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
 import { z } from "zod";
 
@@ -37,8 +38,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Scrape new property data
-      const scrapedProperty = await scraper.searchProperty(query);
+      // Get property data from available sources
+      const scrapedProperty = await dataSourceManager.searchProperty(query);
       if (!scrapedProperty) {
         return res.status(404).json({ 
           message: "Property not found. Please check the address or postcode and try again." 
@@ -60,7 +61,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Get market data for analysis
-      const marketPrices = await scraper.getMarketData(
+      const marketPrices = await dataSourceManager.getMarketData(
         property.neighbourhood || '',
         property.bedrooms,
         property.propertyType
@@ -181,6 +182,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get properties error:', error);
       res.status(500).json({ message: "Error retrieving properties" });
+    }
+  });
+
+  // Get data source status
+  app.get("/api/data-sources", (req, res) => {
+    try {
+      const status = dataSourceManager.getDataSourceStatus();
+      const activeSources = dataSourceManager.getActiveDataSources();
+      
+      res.json({
+        status,
+        activeSources,
+        currentlyUsing: activeSources[0] // First available source
+      });
+    } catch (error) {
+      console.error('Get data sources error:', error);
+      res.status(500).json({ message: "Error retrieving data source information" });
     }
   });
 

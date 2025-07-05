@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import PropertySearch from "@/components/property-search";
 import PropertyResults from "@/components/property-results";
 import PropertyListings from "@/components/property-listings";
+import DataSourceStatus from "@/components/data-source-status";
 import { Home } from "lucide-react";
 import type { AnalysisResult } from "@shared/schema";
 
@@ -14,6 +15,11 @@ export default function HomePage() {
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Data Source Status */}
+        <div className="mb-6">
+          <DataSourceStatus />
+        </div>
+
         <PropertySearch onResults={setResults} />
         
         {results && (
