@@ -39,7 +39,7 @@ export default function PropertySearch({ onResults }: PropertySearchProps) {
             Check if your rental price is fair
           </h2>
           <p className="text-lg text-gray-600">
-            Enter a property address to get instant analysis across three key metrics
+            Enter a UK postcode or area to get instant analysis using official government data
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function PropertySearch({ onResults }: PropertySearchProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Enter building name, street address, or postcode (e.g. 'Canary Wharf', 'SW1A 1AA')"
+              placeholder="Enter UK postcode or area (e.g. 'SW1A 1AA', 'M1 1AA', 'EC2A 4DP')"
               className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               disabled={searchMutation.isPending}
             />
