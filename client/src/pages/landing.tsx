@@ -49,7 +49,7 @@ export default function LandingPage() {
               </a>
             </Button>
             <p className="text-sm text-gray-500 mt-4 text-center">
-              Experience our rental price fairness checker with mock examples
+              Try the demo with simulated data
             </p>
           </div>
         </div>
