@@ -1,9 +1,71 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Home, Shield, TrendingUp, Calculator, ArrowRight, Users, Clock, DollarSign } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Home, Shield, TrendingUp, Calculator, ArrowRight, Users, Clock, DollarSign, Globe, MapPin } from "lucide-react";
+import { useState } from "react";
+
+const countries = {
+  uk: {
+    name: "United Kingdom",
+    flag: "🇬🇧",
+    currency: "GBP",
+    currencySymbol: "£",
+    examplePrice: 2200,
+    cities: [
+      "London", "Manchester", "Birmingham", "Leeds", "Liverpool", "Sheffield", 
+      "Bristol", "Newcastle", "Nottingham", "Leicester", "Edinburgh", "Glasgow",
+      "Cardiff", "Belfast", "Brighton", "Oxford", "Cambridge", "Bath"
+    ]
+  },
+  za: {
+    name: "South Africa",
+    flag: "🇿🇦",
+    currency: "ZAR", 
+    currencySymbol: "R",
+    examplePrice: 18500,
+    cities: [
+      "Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth",
+      "Bloemfontein", "East London", "Pietermaritzburg", "Welkom", "Kimberley",
+      "Rustenburg", "Polokwane", "Witbank", "Nelspruit", "Klerksdorp"
+    ]
+  },
+  nl: {
+    name: "Netherlands",
+    flag: "🇳🇱",
+    currency: "EUR",
+    currencySymbol: "€",
+    examplePrice: 1850,
+    cities: [
+      "Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Tilburg",
+      "Groningen", "Almere", "Breda", "Nijmegen", "Enschede", "Haarlem",
+      "Arnhem", "Zaanstad", "Amersfoort", "Apeldoorn", "Maastricht", "Dordrecht"
+    ]
+  }
+};
 
 export default function LandingPage() {
+  const [selectedCountry, setSelectedCountry] = useState<keyof typeof countries>("uk");
+  const [selectedCity, setSelectedCity] = useState("");
+
+  const formatCurrency = (amount: number, countryCode: keyof typeof countries) => {
+    const country = countries[countryCode];
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: country.currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const getExampleCity = (countryCode: keyof typeof countries) => {
+    const cityExamples = {
+      uk: "Shoreditch",
+      za: "Cape Town",
+      nl: "Amsterdam"
+    };
+    return cityExamples[countryCode];
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -37,13 +99,64 @@ export default function LandingPage() {
             A rental price fairness checker that helps property renters know if they are overpaying by comparing rental prices against local market averages, area regulation limits, and ownership price.
           </p>
           
-          <div className="max-w-md mx-auto">
+          <div className="max-w-lg mx-auto">
+            {/* Location Selection */}
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+              <div className="flex items-center justify-center mb-4">
+                <Globe className="h-5 w-5 text-primary mr-2" />
+                <h3 className="text-lg font-semibold text-gray-900">Choose Your Location</h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                  <Select value={selectedCountry} onValueChange={(value: keyof typeof countries) => {
+                    setSelectedCountry(value);
+                    setSelectedCity("");
+                  }}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(countries).map(([code, country]) => (
+                        <SelectItem key={code} value={code}>
+                          <div className="flex items-center">
+                            <span className="mr-2">{country.flag}</span>
+                            {country.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                  <Select value={selectedCity} onValueChange={setSelectedCity}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries[selectedCountry].cities.map((city) => (
+                        <SelectItem key={city} value={city}>
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                            {city}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
             <Button 
               asChild
               size="lg"
               className="bg-primary hover:bg-primary/90 w-full"
             >
-              <a href="/app">
+              <a href={`/app?country=${selectedCountry}&city=${encodeURIComponent(selectedCity || '')}`}>
                 Try FairRent Demo
                 <ArrowRight className="ml-2 h-4 w-4" />
               </a>
@@ -117,7 +230,7 @@ export default function LandingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">This Solution</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              FairRent instantly analyzes any rental property and gives you a fairness rating
+              FairRent instantly analyzes a rental property and gives you a fairness rating
             </p>
           </div>
 
@@ -167,22 +280,30 @@ export default function LandingPage() {
                 <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full px-4 py-2 inline-block mb-4">
                   <span className="font-bold">GOLD RATING</span>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">£2,200/month</h3>
-                <p className="text-gray-600">2 bed flat in Shoreditch</p>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {formatCurrency(countries[selectedCountry].examplePrice, selectedCountry)}/month
+                </h3>
+                <p className="text-gray-600">2 bed flat in {getExampleCity(selectedCountry)}</p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">vs. Market Average</span>
-                  <span className="text-green-600 font-semibold">£300 below</span>
+                  <span className="text-green-600 font-semibold">
+                    {formatCurrency(Math.round(countries[selectedCountry].examplePrice * 0.14), selectedCountry)} below
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">vs. Regulation Limit</span>
-                  <span className="text-green-600 font-semibold">£150 below</span>
+                  <span className="text-green-600 font-semibold">
+                    {formatCurrency(Math.round(countries[selectedCountry].examplePrice * 0.07), selectedCountry)} below
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">vs. Ownership Cost</span>
-                  <span className="text-green-600 font-semibold">£400 below</span>
+                  <span className="text-green-600 font-semibold">
+                    {formatCurrency(Math.round(countries[selectedCountry].examplePrice * 0.18), selectedCountry)} below
+                  </span>
                 </div>
               </div>
 

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Shield, TrendingUp, Calculator } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Shield, TrendingUp, Calculator, MapPin, Globe } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { AnalysisResult } from "@shared/schema";
@@ -12,8 +13,37 @@ interface PropertySearchProps {
   onSearchPerformed?: () => void;
 }
 
+const countries = {
+  uk: {
+    name: "United Kingdom",
+    cities: [
+      "London", "Manchester", "Birmingham", "Leeds", "Liverpool", "Sheffield", 
+      "Bristol", "Newcastle", "Nottingham", "Leicester", "Edinburgh", "Glasgow",
+      "Cardiff", "Belfast", "Brighton", "Oxford", "Cambridge", "Bath"
+    ]
+  },
+  za: {
+    name: "South Africa", 
+    cities: [
+      "Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth",
+      "Bloemfontein", "East London", "Pietermaritzburg", "Welkom", "Kimberley",
+      "Rustenburg", "Polokwane", "Witbank", "Nelspruit", "Klerksdorp"
+    ]
+  },
+  nl: {
+    name: "Netherlands",
+    cities: [
+      "Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Tilburg",
+      "Groningen", "Almere", "Breda", "Nijmegen", "Enschede", "Haarlem",
+      "Arnhem", "Zaanstad", "Amersfoort", "Apeldoorn", "Maastricht", "Dordrecht"
+    ]
+  }
+};
+
 export default function PropertySearch({ onResults, onSearchPerformed }: PropertySearchProps) {
   const [query, setQuery] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState<keyof typeof countries>("uk");
+  const [selectedCity, setSelectedCity] = useState("");
 
   const searchMutation = useMutation({
     mutationFn: async (searchQuery: string) => {
