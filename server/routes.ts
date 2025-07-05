@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { scraper } from "./services/scraper";
 import { analyzer } from "./services/analysis";
 import { dataSourceManager } from "./services/data-source-manager";
-import { searchPropertySchema, insertEarlyAccessSignupSchema, insertUserFeedbackSchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
+import { searchPropertySchema, type AnalysisResult, type PropertyWithAnalysis } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -202,21 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Early access signup
-  app.post("/api/early-access", async (req, res) => {
-    try {
-      const signupData = insertEarlyAccessSignupSchema.parse(req.body);
-      const signup = await storage.createEarlyAccessSignup(signupData);
-      res.json({ message: "Successfully joined early access waitlist", id: signup.id });
-    } catch (error) {
-      console.error('Early access signup error:', error);
-      if (error instanceof Error && error.message.includes('Email already registered')) {
-        res.status(400).json({ message: "Email already registered for early access" });
-      } else {
-        res.status(500).json({ message: "Error joining early access waitlist" });
-      }
-    }
-  });
+
 
   const httpServer = createServer(app);
   return httpServer;

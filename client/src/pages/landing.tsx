@@ -1,49 +1,9 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Home, Shield, TrendingUp, Calculator, Mail, ArrowRight, Users, Clock, DollarSign } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Home, Shield, TrendingUp, Calculator, ArrowRight, Users, Clock, DollarSign } from "lucide-react";
 
 export default function LandingPage() {
-  const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const { toast } = useToast();
-
-  const signupMutation = useMutation({
-    mutationFn: async (emailAddress: string) => {
-      const response = await apiRequest("POST", "/api/early-access", { 
-        email: emailAddress,
-        timestamp: new Date().toISOString()
-      });
-      return response.json();
-    },
-    onSuccess: () => {
-      setIsSubmitted(true);
-      setEmail("");
-      toast({
-        title: "Success!",
-        description: "You're on the waitlist! We'll notify you when FairRent launches.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to join waitlist. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      signupMutation.mutate(email.trim());
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -77,29 +37,21 @@ export default function LandingPage() {
             A rental price fairness checker that helps property renters know if they are overpaying by comparing rental prices against local market averages, area regulation limits, and ownership price.
           </p>
           
-          {!isSubmitted ? (
-              <div className="mt-6">
-                <a 
-                  href="/app" 
-                  className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-lg font-bold"
-                >
-                  Try Demo
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </div>
-          ) : (
-            <div className="max-w-md mx-auto">
-              <div className="bg-green-100 border border-green-200 rounded-lg p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <Check className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-green-800 mb-2">You're on the list!</h3>
-                <p className="text-green-700">
-                  We'll notify you as soon as FairRent is ready. Thank you for your interest!
-                </p>
-              </div>
-            </div>
-          )}
+          <div className="max-w-md mx-auto">
+            <Button 
+              asChild
+              size="lg"
+              className="bg-primary hover:bg-primary/90 w-full"
+            >
+              <a href="/app">
+                Try FairRent Demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+            <p className="text-sm text-gray-500 mt-4 text-center">
+              Experience our rental price fairness checker with real examples
+            </p>
+          </div>
         </div>
       </section>
 

@@ -115,12 +115,15 @@ FairRent is a full-stack web application that helps users analyze rental propert
 - Development banner script for external access
 
 ## Recent Changes
+- July 5, 2025: **REMOVED** - Early access signup system
+  - Removed email collection forms and early access signup functionality
+  - Cleaned up backend API routes and storage for early access signups
+  - Simplified landing page to focus on demo access only
 - July 5, 2025: **ADDED** - Landing page for POC/MVP demand validation
-  - Created comprehensive landing page with email collection for early access
+  - Created comprehensive landing page with clear value proposition
   - Updated app description: "A rental price fairness checker that helps property renters solve uncertainty about overpaying by comparing rental prices against local market averages, area regulation limits, and ownership prices"
-  - Added early access signup API endpoint and storage system
   - Set landing page as default route (/) with demo app moved to /app
-  - Landing page includes problem/solution sections and call-to-action for waitlist
+  - Landing page includes problem/solution sections and call-to-action for demo
   - Fixed "No properties found" showing on initial page load - now only shows after search
 - July 5, 2025: **REMOVED** - Completely removed UK Government regional data system
   - User requested complete removal of UK Government data source
