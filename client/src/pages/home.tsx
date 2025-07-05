@@ -9,6 +9,7 @@ import type { AnalysisResult } from "@shared/schema";
 
 export default function HomePage() {
   const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -20,7 +21,7 @@ export default function HomePage() {
           <DataSourceStatus />
         </div>
 
-        <PropertySearch onResults={setResults} />
+        <PropertySearch onResults={setResults} onSearchPerformed={() => setHasSearched(true)} />
         
         {results && (
           <div className="mt-8">
@@ -28,10 +29,12 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Property Listings Section */}
-        <div className="mt-8">
-          <PropertyListings />
-        </div>
+        {/* Property Listings Section - only show after search has been performed */}
+        {hasSearched && (
+          <div className="mt-8">
+            <PropertyListings />
+          </div>
+        )}
       </main>
 
       {/* Footer */}

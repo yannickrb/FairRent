@@ -9,9 +9,10 @@ import type { AnalysisResult } from "@shared/schema";
 
 interface PropertySearchProps {
   onResults: (results: AnalysisResult) => void;
+  onSearchPerformed?: () => void;
 }
 
-export default function PropertySearch({ onResults }: PropertySearchProps) {
+export default function PropertySearch({ onResults, onSearchPerformed }: PropertySearchProps) {
   const [query, setQuery] = useState("");
 
   const searchMutation = useMutation({
@@ -27,6 +28,7 @@ export default function PropertySearch({ onResults }: PropertySearchProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
+      onSearchPerformed?.();
       searchMutation.mutate(query.trim());
     }
   };
